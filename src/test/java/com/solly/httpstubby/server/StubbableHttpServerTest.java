@@ -89,7 +89,7 @@ public class StubbableHttpServerTest {
     public void storesLastResponse() throws Exception {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned")));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
 
         whenAHttpGetRequestIsMadeFor("/context/some-url");
 
@@ -103,7 +103,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturnWhenNoResponseFound(responseOf(NOT_FOUND, "no responses match")));
+        underTest.willReturnWhenNoResponseFound(responseOf(NOT_FOUND, "no responses match"));
 
         whenAHttpGetRequestIsMadeFor("/context/some-url-with-no-response-found");
 
@@ -117,8 +117,8 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-not-be-returned"), uriEqualTo("/context/url-not-to-be-called")));
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriEqualTo("/context/url-to-be-called")));
+        underTest.willReturn(responseOf(OK, "response-not-be-returned"), uriEqualTo("/context/url-not-to-be-called"));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriEqualTo("/context/url-to-be-called"));
 
         whenAHttpGetRequestIsMadeFor("/context/url-to-be-called");
 
@@ -132,8 +132,8 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-should-be-returned"), uriEqualTo("/context/url")));
-        and(underTest.willReturn(responseOf(OK, "response-should-not-be-returned"), uriStartsWith("/context/url")));
+        underTest.willReturn(responseOf(OK, "response-should-be-returned"), uriEqualTo("/context/url"));
+        underTest.willReturn(responseOf(OK, "response-should-not-be-returned"), uriStartsWith("/context/url"));
 
         whenAHttpGetRequestIsMadeFor("/context/url");
 
@@ -147,7 +147,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-for-post-request"), forAPostRequest()));
+        underTest.willReturn(responseOf(OK, "response-for-post-request"), forAPostRequest());
 
         whenAHttpPostRequestIsMadeFor("/context/url-to-test");
 
@@ -161,7 +161,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-body-for-a-post-request"), forAPostRequest()));
+        underTest.willReturn(responseOf(OK, "response-body-for-a-post-request"), forAPostRequest());
 
         whenAHttpGetRequestIsMadeFor("/context/url-for-a-get-request");
 
@@ -173,8 +173,8 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-not-be-returned"), uriEqualTo("/context/response-uri-with-query-params")));
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriEqualTo("/context/response-uri-with-query-params?x=this-is-the-correct-request")));
+        underTest.willReturn(responseOf(OK, "response-not-be-returned"), uriEqualTo("/context/response-uri-with-query-params"));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriEqualTo("/context/response-uri-with-query-params?x=this-is-the-correct-request"));
 
         whenAHttpGetRequestIsMadeFor("/context/response-uri-with-query-params?x=this-is-the-correct-request");
 
@@ -188,7 +188,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriStartsWith("/context/url")));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriStartsWith("/context/url"));
 
         whenAHttpGetRequestIsMadeFor("/context/url-that-ends-with-anything");
 
@@ -205,8 +205,8 @@ public class StubbableHttpServerTest {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned")
-                .withLatency(Duration.ofSeconds(2))));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned")
+                .withLatency(Duration.ofSeconds(2)));
 
         whenAHttpGetRequestIsMadeFor("/context/url-that-ends-with-anything");
 
@@ -220,7 +220,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned"), forAGetRequest()));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"), forAGetRequest());
 
         whenAHttpGetRequestIsMadeFor("/context/some-url");
 
@@ -234,7 +234,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned"), forAPostRequest()));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"), forAPostRequest());
 
         whenAHttpPostRequestIsMadeFor("/context/some-url");
 
@@ -248,8 +248,8 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned")
-                .withHeader("some-header-key", "some-header-value")));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned")
+                .withHeader("some-header-key", "some-header-value"));
 
         whenAHttpGetRequestIsMadeFor("/context/some-url");
 
@@ -264,13 +264,13 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, new Callable<String>() {
+        underTest.willReturn(responseOf(OK, new Callable<String>() {
             private final AtomicInteger uniqueNumber = new AtomicInteger(1);
 
             public String call() {
                 return String.valueOf(uniqueNumber.getAndIncrement());
             }
-        })));
+        }));
 
         whenAHttpGetRequestIsMadeFor("/context/unique-number-generator");
 
@@ -290,7 +290,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpsServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned")));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
 
         whenAHttpsGetRequestIsMadeFor("/context/some-url");
 
@@ -305,7 +305,7 @@ public class StubbableHttpServerTest {
                 .createContext("/https-keystore.jks", "password")));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned")));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
 
         whenAHttpsGetRequestIsMadeFor("/context/some-url");
 
@@ -319,7 +319,7 @@ public class StubbableHttpServerTest {
         underTest = new StubbableHttpServer(HttpServerFactory.createHttpServer(nextAvailablePortNumber()));
         underTest.startWithContext("/context");
 
-        and(underTest.willReturn(responseOf(OK, "response-to-be-returned")));
+        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
 
         whenAHttpGetRequestIsMadeFor("/context/some-url");
 
