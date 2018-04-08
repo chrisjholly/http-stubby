@@ -15,16 +15,16 @@ public class HttpResponseBuilder {
     private Callable<String> bodyCallback = () -> "";
     private Duration latency = ZERO;
 
+    private HttpResponseBuilder(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
     public static HttpResponseBuilder responseOf(HttpStatus.Code code) {
         return new HttpResponseBuilder(code.getCode());
     }
 
     public static HttpResponseBuilder responseOf(int code) {
         return new HttpResponseBuilder(code);
-    }
-
-    private HttpResponseBuilder(int statusCode) {
-        this.statusCode = statusCode;
     }
 
     public HttpResponseBuilder withHeader(String name, String value) {
