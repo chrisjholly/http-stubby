@@ -1,6 +1,6 @@
 package com.staygrounded.httpstubby.matchers.response;
 
-import com.staygrounded.httpstubby.response.HttpResponse;
+import com.staygrounded.httpstubby.server.response.HttpResponse;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 

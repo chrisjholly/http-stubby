@@ -1,6 +1,8 @@
-package com.staygrounded.httpstubby.response;
+package com.staygrounded.httpstubby.matchers.response;
 
-import com.staygrounded.httpstubby.request.HttpRequest;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
+import com.staygrounded.httpstubby.server.response.HttpResponse;
+import com.staygrounded.httpstubby.server.response.HttpResponseBuilder;
 import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.staygrounded.httpstubby.response.HttpStatus.Code.NOT_FOUND;
-import static com.staygrounded.httpstubby.response.HttpResponseBuilder.responseOf;
+import static com.staygrounded.httpstubby.server.response.HttpStatus.Code.NOT_FOUND;
+import static com.staygrounded.httpstubby.server.response.HttpResponseBuilder.responseOf;
 
 public class HttpResponseMatcher {
 
@@ -30,7 +32,7 @@ public class HttpResponseMatcher {
         requestResponseMappings.clear();
     }
 
-    public HttpResponse matchHttpRequestToHttpResponse(HttpRequest httpRequest) {
+    public HttpResponse findHttpResponseFromHttpRequest(HttpRequest httpRequest) {
         LOGGER.info("Attempting to find matcher for request: {}", httpRequest);
 
         for (Matcher<HttpRequest> matcher : requestResponseMappings.keySet()) {

@@ -1,4 +1,4 @@
-package com.staygrounded.httpstubby.response;
+package com.staygrounded.httpstubby.server.response;
 
 import java.time.Duration;
 import java.util.HashMap;

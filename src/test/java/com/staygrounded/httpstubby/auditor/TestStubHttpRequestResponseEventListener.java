@@ -1,9 +1,9 @@
-package com.staygrounded.httpstubby.handler;
+package com.staygrounded.httpstubby.auditor;
 
-import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.HttpResponse;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
+import com.staygrounded.httpstubby.server.response.HttpResponse;
 
-public class TestStubRequestResponseHandlerListener implements RequestResponseHandlerListener {
+public class TestStubHttpRequestResponseEventListener implements HttpRequestResponseEventListener {
 
     private boolean hasRequest;
     private boolean hasResponse;

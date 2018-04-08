@@ -1,9 +1,9 @@
-package com.staygrounded.httpstubby.handler;
+package com.staygrounded.httpstubby.server.handler;
 
-import com.staygrounded.httpstubby.history.History;
-import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.HttpResponse;
-import com.staygrounded.httpstubby.response.HttpResponseMatcher;
+import com.staygrounded.httpstubby.auditor.HttpRequestResponseAuditor;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
+import com.staygrounded.httpstubby.server.response.HttpResponse;
+import com.staygrounded.httpstubby.matchers.response.HttpResponseMatcher;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;
@@ -14,41 +14,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.staygrounded.httpstubby.request.HttpRequest.createHttpRequestFrom;
+import static com.staygrounded.httpstubby.server.request.HttpRequest.createHttpRequestFrom;
 import static java.util.Collections.singletonList;
 
 
 public class HttpRequestHandler implements HttpHandler {
+
     private static final Logger LOG = LoggerFactory.getLogger(HttpRequestHandler.class);
 
     private final HttpResponseMatcher responseSelector;
-    private final History history;
-    private final RequestResponseHandlerListener requestResponseHandlerListener;
+    private final HttpRequestResponseAuditor httpRequestResponseAuditor;
 
-    private HttpRequestHandler(HttpResponseMatcher responseSelector,
-                               History history,
-                               RequestResponseHandlerListener requestResponseHandlerListener) {
+    private HttpRequestHandler(HttpResponseMatcher responseSelector, HttpRequestResponseAuditor httpRequestResponseAuditor) {
         this.responseSelector = responseSelector;
-        this.history = history;
-        this.requestResponseHandlerListener = requestResponseHandlerListener;
+        this.httpRequestResponseAuditor = httpRequestResponseAuditor;
     }
 
-    public static HttpRequestHandler httpRequestHandler(HttpResponseMatcher responseSelector,
-                                                        History history,
-                                                        RequestResponseHandlerListener requestResponseHandlerListener) {
-        return new HttpRequestHandler(responseSelector, history, requestResponseHandlerListener);
+    public static HttpRequestHandler httpRequestHandler(HttpResponseMatcher responseSelector, HttpRequestResponseAuditor httpRequestResponseAuditor) {
+        return new HttpRequestHandler(responseSelector, httpRequestResponseAuditor);
     }
 
     @Override
     public final void handle(HttpExchange httpExchange) {
         try {
             final HttpRequest httpRequest = createHttpRequestFrom(httpExchange);
-            history.newRequest(httpRequest);
-            requestResponseHandlerListener.newRequest(httpRequest);
+            httpRequestResponseAuditor.newRequest(httpRequest);
 
-            final HttpResponse httpResponse = responseSelector.matchHttpRequestToHttpResponse(httpRequest);
-            history.newResponse(httpResponse);
-            requestResponseHandlerListener.newResponse(httpResponse);
+            final HttpResponse httpResponse = responseSelector.findHttpResponseFromHttpRequest(httpRequest);
+            httpRequestResponseAuditor.newResponse(httpResponse);
 
             generateResponse(httpExchange, httpResponse);
         } catch (Throwable t) {

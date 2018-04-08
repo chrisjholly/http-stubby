@@ -1,35 +1,41 @@
 package com.staygrounded.httpstubby.server;
 
-import com.staygrounded.httpstubby.handler.DoNothingRequestResponseHandlerListener;
-import com.staygrounded.httpstubby.handler.RequestResponseHandlerListener;
-import com.staygrounded.httpstubby.history.History;
-import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.HttpResponseMatcher;
-import com.staygrounded.httpstubby.response.HttpResponseBuilder;
-import com.staygrounded.httpstubby.handler.HttpRequestHandler;
+import com.staygrounded.httpstubby.auditor.HttpRequestResponseAuditor;
+import com.staygrounded.httpstubby.auditor.HttpRequestResponseEventListener;
+import com.staygrounded.httpstubby.auditor.HttpRequestResponseHistory;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
+import com.staygrounded.httpstubby.server.response.HttpResponseBuilder;
+import com.staygrounded.httpstubby.matchers.response.HttpResponseMatcher;
 import org.hamcrest.Matcher;
 
+import static com.staygrounded.httpstubby.server.handler.HttpRequestHandler.httpRequestHandler;
 import static org.hamcrest.core.AllOf.allOf;
 
-public class HttpStubbyServer {
+class HttpStubbyServer {
 
     private final HttpServer server;
     private final HttpResponseMatcher httpResponseMatcher;
-    private final History history;
+    private final HttpRequestResponseHistory httpRequestResponseHistory;
+    private final HttpRequestResponseAuditor httpRequestResponseAuditor;
 
-    protected HttpStubbyServer(HttpServer server) {
+    private HttpStubbyServer(HttpServer server) {
         this.server = server;
         this.httpResponseMatcher = new HttpResponseMatcher();
-        this.history = new History();
+        this.httpRequestResponseHistory = new HttpRequestResponseHistory();
+        this.httpRequestResponseAuditor = new HttpRequestResponseAuditor(httpRequestResponseHistory);
+    }
+
+    public static HttpStubbyServer stubbyServerWith(HttpServer httpServer) {
+        return new HttpStubbyServer(httpServer);
+    }
+
+    public void registerHttpRequestResponseEventListener(HttpRequestResponseEventListener httpRequestResponseEventListener) {
+        httpRequestResponseAuditor.registerHttpRequestResponseEventListener(httpRequestResponseEventListener);
     }
 
     public void start() {
-        this.start(new DoNothingRequestResponseHandlerListener());
-    }
-
-    public void start(RequestResponseHandlerListener requestResponseHandlerListener) {
-        this.server.addContext(HttpRequestHandler.httpRequestHandler(httpResponseMatcher, history, requestResponseHandlerListener));
-        this.history.clear();
+        this.server.addContext(httpRequestHandler(httpResponseMatcher, httpRequestResponseAuditor));
+        this.httpRequestResponseHistory.clear();
         this.server.start();
     }
 
@@ -41,12 +47,12 @@ public class HttpStubbyServer {
         return server.port();
     }
 
-    public History history() {
-        return history;
+    public HttpRequestResponseHistory httpRequestResponseHistory() {
+        return httpRequestResponseHistory;
     }
 
     public void clearHistoryAndResponses() {
-        history.clear();
+        httpRequestResponseHistory.clear();
         httpResponseMatcher.clearResponses();
     }
 

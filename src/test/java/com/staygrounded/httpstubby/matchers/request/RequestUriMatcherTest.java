@@ -1,6 +1,6 @@
 package com.staygrounded.httpstubby.matchers.request;
 
-import com.staygrounded.httpstubby.request.HttpRequest;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
 import org.junit.Test;
 
 import java.net.URI;

@@ -1,8 +1,8 @@
-package com.staygrounded.httpstubby.response;
+package com.staygrounded.httpstubby.server.response;
 
 import java.util.Map;
 
-import static com.staygrounded.httpstubby.response.MediaType.TEXT_PLAIN;
+import static com.staygrounded.httpstubby.server.MediaType.TEXT_PLAIN;
 import static java.nio.charset.Charset.defaultCharset;
 
 public class HttpResponse {

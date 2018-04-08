@@ -1,6 +1,8 @@
-package com.staygrounded.httpstubby.response;
+package com.staygrounded.httpstubby.matchers.response;
 
-import com.staygrounded.httpstubby.request.HttpRequest;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
+import com.staygrounded.httpstubby.server.response.HttpResponse;
+import com.staygrounded.httpstubby.server.response.HttpResponseBuilder;
 import org.junit.Test;
 
 import java.net.URI;
@@ -8,9 +10,9 @@ import java.net.URISyntaxException;
 
 import static com.staygrounded.httpstubby.matchers.request.RequestUriMatcher.uriEqualTo;
 import static com.staygrounded.httpstubby.matchers.request.RequestUriMatcher.uriStartsWith;
-import static com.staygrounded.httpstubby.request.HttpMethod.GET;
-import static com.staygrounded.httpstubby.request.HttpRequest.createHttpRequestWith;
-import static com.staygrounded.httpstubby.response.HttpStatus.Code.NOT_FOUND;
+import static com.staygrounded.httpstubby.server.request.HttpMethod.GET;
+import static com.staygrounded.httpstubby.server.request.HttpRequest.createHttpRequestWith;
+import static com.staygrounded.httpstubby.server.response.HttpStatus.Code.NOT_FOUND;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -31,7 +33,7 @@ public class HttpResponseMatcherTest {
         underTest.addResponse(uriStartsWith("/some-url"), createResponseBuilder(unexpectedHttpResponse));
 
         final HttpRequest httpRequest = createHttpRequestWith(GET, URI.create("/some-url"));
-        final HttpResponse actualHttpResponse = underTest.matchHttpRequestToHttpResponse(httpRequest);
+        final HttpResponse actualHttpResponse = underTest.findHttpResponseFromHttpRequest(httpRequest);
 
         assertEquals(expectedHttpResponse, actualHttpResponse);
     }
@@ -43,7 +45,7 @@ public class HttpResponseMatcherTest {
         underTest.addResponse(uriEqualTo("/another-url"), createResponseBuilder(unexpectedHttpResponse));
 
         final HttpRequest httpRequest = createHttpRequestWith(GET, URI.create("/some-url"));
-        final HttpResponse actualHttpResponse = underTest.matchHttpRequestToHttpResponse(httpRequest);
+        final HttpResponse actualHttpResponse = underTest.findHttpResponseFromHttpRequest(httpRequest);
 
         assertThat(actualHttpResponse.getStatusCode(), is(NOT_FOUND.getCode()));
     }
@@ -55,7 +57,7 @@ public class HttpResponseMatcherTest {
         underTest.setDefaultResponse(createResponseBuilder(expectedHttpResponse));
 
         final HttpRequest httpRequest = createHttpRequestWith(GET, URI.create("/some-url"));
-        final HttpResponse actualHttpResponse = underTest.matchHttpRequestToHttpResponse(httpRequest);
+        final HttpResponse actualHttpResponse = underTest.findHttpResponseFromHttpRequest(httpRequest);
 
         assertEquals(expectedHttpResponse, actualHttpResponse);
     }
@@ -69,7 +71,7 @@ public class HttpResponseMatcherTest {
         underTest.setDefaultResponse(createResponseBuilder(unexpectedHttpResponse));
 
         final HttpRequest httpRequest = createHttpRequestWith(GET, URI.create("/some-url"));
-        final HttpResponse actualHttpResponse = underTest.matchHttpRequestToHttpResponse(httpRequest);
+        final HttpResponse actualHttpResponse = underTest.findHttpResponseFromHttpRequest(httpRequest);
 
         assertEquals(expectedHttpResponse, actualHttpResponse);
     }

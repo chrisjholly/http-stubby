@@ -1,11 +1,11 @@
 package com.staygrounded.httpstubby.matchers.request;
 
-import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.request.HttpMethod;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
+import com.staygrounded.httpstubby.server.request.HttpMethod;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import static com.staygrounded.httpstubby.request.HttpMethod.*;
+import static com.staygrounded.httpstubby.server.request.HttpMethod.*;
 import static org.hamcrest.Matchers.equalTo;
 
 public class RequestMethodMatcher extends TypeSafeMatcher<HttpRequest> {

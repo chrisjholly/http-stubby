@@ -1,13 +1,13 @@
 package com.staygrounded.httpstubby.matchers.request;
 
-import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.request.HttpMethod;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
+import com.staygrounded.httpstubby.server.request.HttpMethod;
 import org.junit.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.staygrounded.httpstubby.request.HttpRequest.createHttpRequestWith;
+import static com.staygrounded.httpstubby.server.request.HttpRequest.createHttpRequestWith;
 import static org.junit.Assert.assertThat;
 
 public class RequestHttpMethodMatcherTest {

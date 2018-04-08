@@ -1,4 +1,4 @@
-package com.staygrounded.httpstubby.request;
+package com.staygrounded.httpstubby.server.request;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HttpRequest {
+
     private final HttpMethod httpMethod;
     private final URI requestUri;
     private final String requestBody;
