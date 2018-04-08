@@ -4,22 +4,22 @@ import com.staygrounded.httpstubby.handler.DoNothingRequestResponseHandlerListen
 import com.staygrounded.httpstubby.handler.RequestResponseHandlerListener;
 import com.staygrounded.httpstubby.history.History;
 import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.HttpResponseSelector;
-import com.staygrounded.httpstubby.response.ResponseBuilder;
+import com.staygrounded.httpstubby.response.HttpResponseMatcher;
+import com.staygrounded.httpstubby.response.HttpResponseBuilder;
 import com.staygrounded.httpstubby.handler.HttpRequestHandler;
 import org.hamcrest.Matcher;
 
 import static org.hamcrest.core.AllOf.allOf;
 
-public class StubbableHttpServer {
+public class HttpStubbyServer {
 
     private final HttpServer server;
-    private final HttpResponseSelector responseSelector;
+    private final HttpResponseMatcher httpResponseMatcher;
     private final History history;
 
-    public StubbableHttpServer(HttpServer server) {
+    protected HttpStubbyServer(HttpServer server) {
         this.server = server;
-        this.responseSelector = HttpResponseSelector.stubbableResponseSelector();
+        this.httpResponseMatcher = new HttpResponseMatcher();
         this.history = new History();
     }
 
@@ -28,7 +28,7 @@ public class StubbableHttpServer {
     }
 
     public void start(RequestResponseHandlerListener requestResponseHandlerListener) {
-        server.addContext("/", HttpRequestHandler.aStubbableHttpHandler(responseSelector, history, requestResponseHandlerListener));
+        this.server.addContext(HttpRequestHandler.httpRequestHandler(httpResponseMatcher, history, requestResponseHandlerListener));
         this.history.clear();
         this.server.start();
     }
@@ -47,16 +47,16 @@ public class StubbableHttpServer {
 
     public void clearHistoryAndResponses() {
         history.clear();
-        responseSelector.clearResponses();
+        httpResponseMatcher.clearResponses();
     }
 
-    public <T extends ResponseBuilder> T willReturn(T responseBuilder, Matcher<HttpRequest>... matchers) {
-        responseSelector.addResponse(allOf(matchers), responseBuilder);
+    public <T extends HttpResponseBuilder> T willReturn(T responseBuilder, Matcher<HttpRequest>... matchers) {
+        httpResponseMatcher.addResponse(allOf(matchers), responseBuilder);
         return responseBuilder;
     }
 
-    public <T extends ResponseBuilder> T willReturnWhenNoResponseFound(T responseBuilder) {
-        responseSelector.setDefaultResponse(responseBuilder);
+    public <T extends HttpResponseBuilder> T willReturnWhenNoResponseFound(T responseBuilder) {
+        httpResponseMatcher.setDefaultResponse(responseBuilder);
         return responseBuilder;
     }
 

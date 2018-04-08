@@ -1,7 +1,7 @@
 package com.staygrounded.httpstubby.history;
 
 import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.Response;
+import com.staygrounded.httpstubby.response.HttpResponse;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -74,12 +74,12 @@ public class HistoryTest {
 
     @Test
     public void lastResponseCanBeCalledMultipleTimes() throws Exception {
-        Response response = mock(Response.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
 
-        underTest.newResponse(response);
+        underTest.newResponse(httpResponse);
 
-        Assert.assertEquals(response, underTest.lastResponse());
-        Assert.assertEquals(response, underTest.lastResponse());
+        Assert.assertEquals(httpResponse, underTest.lastResponse());
+        Assert.assertEquals(httpResponse, underTest.lastResponse());
     }
 
     @Test
@@ -95,22 +95,22 @@ public class HistoryTest {
 
     @Test
     public void retrievesLatestResponse() throws Exception {
-        Response olderResponse = mock(Response.class);
-        Response newerResponse = mock(Response.class);
+        HttpResponse olderHttpResponse = mock(HttpResponse.class);
+        HttpResponse newerHttpResponse = mock(HttpResponse.class);
 
-        underTest.newResponse(olderResponse);
-        underTest.newResponse(newerResponse);
+        underTest.newResponse(olderHttpResponse);
+        underTest.newResponse(newerHttpResponse);
 
-        Assert.assertEquals(newerResponse, underTest.lastResponse());
+        Assert.assertEquals(newerHttpResponse, underTest.lastResponse());
     }
 
     @Test
     public void lastRequestAndResponseAreNullAfterClearingRequestHistory() throws Exception {
         HttpRequest request = mock(HttpRequest.class);
-        Response response = mock(Response.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
 
         underTest.newRequest(request);
-        underTest.newResponse(response);
+        underTest.newResponse(httpResponse);
         underTest.clear();
 
         assertNull(underTest.lastRequest());

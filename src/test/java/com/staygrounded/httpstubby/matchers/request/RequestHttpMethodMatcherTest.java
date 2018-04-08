@@ -7,36 +7,37 @@ import org.junit.Test;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.staygrounded.httpstubby.request.HttpRequest.createHttpRequestWith;
 import static org.junit.Assert.assertThat;
 
 public class RequestHttpMethodMatcherTest {
     @Test
     public void aGetRequest() throws Exception {
-        assertThat(aRequestWithMethod(HttpMethod.GET), RequestMethodMatcher.forAGetRequest());
+        assertThat(aRequestWithHttpMethod(HttpMethod.GET), RequestMethodMatcher.forAGetRequest());
     }
 
     @Test
     public void aPostRequest() throws Exception {
-        assertThat(aRequestWithMethod(HttpMethod.POST), RequestMethodMatcher.forAPostRequest());
+        assertThat(aRequestWithHttpMethod(HttpMethod.POST), RequestMethodMatcher.forAPostRequest());
     }
 
     @Test
     public void aPutRequest() throws Exception {
-        assertThat(aRequestWithMethod(HttpMethod.PUT), RequestMethodMatcher.forAPutRequest());
+        assertThat(aRequestWithHttpMethod(HttpMethod.PUT), RequestMethodMatcher.forAPutRequest());
     }
 
     @Test
     public void aDeleteRequest() throws Exception {
-        assertThat(aRequestWithMethod(HttpMethod.DELETE), RequestMethodMatcher.forADeleteRequest());
+        assertThat(aRequestWithHttpMethod(HttpMethod.DELETE), RequestMethodMatcher.forADeleteRequest());
     }
 
     @Test
     public void aHeadRequest() throws Exception {
-        assertThat(aRequestWithMethod(HttpMethod.HEAD), RequestMethodMatcher.forAHeadRequest());
+        assertThat(aRequestWithHttpMethod(HttpMethod.HEAD), RequestMethodMatcher.forAHeadRequest());
     }
 
-    private HttpRequest aRequestWithMethod(HttpMethod httpMethod) throws URISyntaxException {
-        return new HttpRequest(httpMethod, new URI("some-url"), null);
+    private HttpRequest aRequestWithHttpMethod(HttpMethod httpMethod) throws URISyntaxException {
+        return createHttpRequestWith(httpMethod, new URI("some-url"));
     }
 
 }

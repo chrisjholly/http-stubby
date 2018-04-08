@@ -1,11 +1,11 @@
 package com.staygrounded.httpstubby.handler;
 
 import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.Response;
+import com.staygrounded.httpstubby.response.HttpResponse;
 
 public interface RequestResponseHandlerListener {
 
     void newRequest(HttpRequest httpRequest);
 
-    void newResponse(Response response);
+    void newResponse(HttpResponse httpResponse);
 }

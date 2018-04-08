@@ -1,7 +1,7 @@
 package com.staygrounded.httpstubby.handler;
 
 import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.Response;
+import com.staygrounded.httpstubby.response.HttpResponse;
 
 public class TestStubRequestResponseHandlerListener implements RequestResponseHandlerListener {
 
@@ -14,7 +14,7 @@ public class TestStubRequestResponseHandlerListener implements RequestResponseHa
     }
 
     @Override
-    public void newResponse(Response response) {
+    public void newResponse(HttpResponse httpResponse) {
         this.hasResponse = true;
     }
 

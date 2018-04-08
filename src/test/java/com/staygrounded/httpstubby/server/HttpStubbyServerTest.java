@@ -26,18 +26,18 @@ import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.staygrounded.httpstubby.matchers.request.RequestHeaderMatcher.requestHeaderContains;
+import static com.staygrounded.httpstubby.matchers.request.RequestHeaderContainsMatcher.requestHeaderContains;
 import static com.staygrounded.httpstubby.matchers.request.RequestMethodMatcher.forAGetRequest;
 import static com.staygrounded.httpstubby.matchers.request.RequestMethodMatcher.forAPostRequest;
 import static com.staygrounded.httpstubby.matchers.request.RequestUriMatcher.uriEqualTo;
 import static com.staygrounded.httpstubby.matchers.request.RequestUriMatcher.uriStartsWith;
 import static com.staygrounded.httpstubby.matchers.response.ResponseBodyMatcher.withBody;
 import static com.staygrounded.httpstubby.matchers.response.ResponseStatusCodeMatcher.withStatusCode;
+import static com.staygrounded.httpstubby.response.HttpResponseBuilder.responseOf;
 import static com.staygrounded.httpstubby.response.HttpStatus.Code.NOT_FOUND;
 import static com.staygrounded.httpstubby.response.HttpStatus.Code.OK;
-import static com.staygrounded.httpstubby.response.ResponseBuilder.responseOf;
 import static com.staygrounded.httpstubby.server.HttpPortNumberGenerator.nextAvailablePortNumber;
-import static com.staygrounded.httpstubby.server.HttpServerFactory.createHttpServer;
+import static com.staygrounded.httpstubby.server.HttpServerFactory.createHttpStubbyServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.nullValue;
@@ -46,14 +46,13 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertTrue;
 
+public class HttpStubbyServerTest {
 
-public class StubbableHttpServerTest {
-
-    private StubbableHttpServer underTest;
+    private HttpStubbyServer underTest;
 
     @Test
     public void storesLastRequestUri() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
         whenAHttpGetRequestIsMadeFor("/some-url");
@@ -63,7 +62,7 @@ public class StubbableHttpServerTest {
 
     @Test
     public void storesLastRequest() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
         whenAHttpGetRequestIsMadeFor("/some-url");
@@ -75,22 +74,21 @@ public class StubbableHttpServerTest {
 
     @Test
     public void storesLastRequestHeaders() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
         whenAHttpGetRequestIsMadeFor("/some-url", withHeader("Some-header-key", "Some-header-value"));
 
         then(underTest.history().lastRequest(), allOf(
                 RequestHeaderExistsMatcher.requestHeaderExists("Some-header-key"),
-                requestHeaderContains("Some-header-key", "Some-header-value"),
-                RequestHeaderExistsMatcher.requestHeaderDoesNotExist("header-which-does-not-exist")));
+                requestHeaderContains("Some-header-key", "Some-header-value")));
     }
 
     @Test
     public void storesLastResponse() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"));
 
         whenAHttpGetRequestIsMadeFor("/some-url");
 
@@ -101,10 +99,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverReturnsConfiguredDefaultResponseWhenNoOtherResponsesFound() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturnWhenNoResponseFound(responseOf(NOT_FOUND, "no responses match"));
+        underTest.willReturnWhenNoResponseFound(responseOf(NOT_FOUND).withBody("no responses match"));
 
         whenAHttpGetRequestIsMadeFor("/some-url-with-no-response-found");
 
@@ -115,11 +113,11 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverRespondsWithCorrectResponseIfMultipleResponsesArePrimed() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-not-be-returned"), uriEqualTo("/url-not-to-be-called"));
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriEqualTo("/url-to-be-called"));
+        underTest.willReturn(responseOf(OK).withBody("response-not-be-returned"), uriEqualTo("/url-not-to-be-called"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"), uriEqualTo("/url-to-be-called"));
 
         whenAHttpGetRequestIsMadeFor("/url-to-be-called");
 
@@ -130,11 +128,11 @@ public class StubbableHttpServerTest {
 
     @Test
     public void returnFirstResponseConfiguredWhenMoreThanOneMatcherMatchesRequest() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-should-be-returned"), uriEqualTo("/url"));
-        underTest.willReturn(responseOf(OK, "response-should-not-be-returned"), uriStartsWith("/url"));
+        underTest.willReturn(responseOf(OK).withBody("response-should-be-returned"), uriEqualTo("/url"));
+        underTest.willReturn(responseOf(OK).withBody("response-should-not-be-)returned"), uriStartsWith("/url"));
 
         whenAHttpGetRequestIsMadeFor("/url");
 
@@ -145,10 +143,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverRespondsForSpecificUriWithAdditionalMatcher() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-for-post-request"), forAPostRequest());
+        underTest.willReturn(responseOf(OK).withBody("response-for-post-request"), forAPostRequest());
 
         whenAHttpPostRequestIsMadeFor("/url-to-test");
 
@@ -159,10 +157,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverRespondsNullForAdditionalRequestMatcherNotMatching() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-body-for-a-post-request"), forAPostRequest());
+        underTest.willReturn(responseOf(OK).withBody("response-body-for-a-)post-request"), forAPostRequest());
 
         whenAHttpGetRequestIsMadeFor("/url-for-a-get-request");
 
@@ -171,11 +169,11 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverRespondsForSpecificUriWithQueryParameters() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-not-be-returned"), uriEqualTo("/response-uri-with-query-params"));
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriEqualTo("/response-uri-with-query-params?x=this-is-the-correct-request"));
+        underTest.willReturn(responseOf(OK).withBody("response-not-be-returned"), uriEqualTo("/response-uri-with-query-params"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"), uriEqualTo("/response-uri-with-query-params?x=this-is-the-correct-request"));
 
         whenAHttpGetRequestIsMadeFor("/response-uri-with-query-params?x=this-is-the-correct-request");
 
@@ -186,10 +184,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverRespondsForAUriThatStartsWith() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"), uriStartsWith("/url"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"), uriStartsWith("/url"));
 
         whenAHttpGetRequestIsMadeFor("/url-that-ends-with-anything");
 
@@ -200,13 +198,13 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverRespondsWithDelay() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned")
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned")
                 .withLatency(Duration.ofSeconds(2)));
 
         whenAHttpGetRequestIsMadeFor("/url-that-ends-with-anything");
@@ -218,10 +216,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void storesLastResponseForAGetRequest() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"), forAGetRequest());
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"), forAGetRequest());
 
         whenAHttpGetRequestIsMadeFor("/some-url");
 
@@ -232,10 +230,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void storesLastResponseForAPostRequest() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"), forAPostRequest());
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"), forAPostRequest());
 
         whenAHttpPostRequestIsMadeFor("/some-url");
 
@@ -246,10 +244,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void storesLastResponseForAResponseWithHeader() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned")
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned")
                 .withHeader("some-header-key", "some-header-value"));
 
         whenAHttpGetRequestIsMadeFor("/some-url");
@@ -262,10 +260,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverRespondsWithADifferentValueOnSubsequentRequests() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, new Callable<String>() {
+        underTest.willReturn(responseOf(OK).withBody(new Callable<String>() {
             private final AtomicInteger uniqueNumber = new AtomicInteger(1);
 
             public String call() {
@@ -288,10 +286,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serverSupportsHttpsRequests() throws Exception {
-        underTest = new StubbableHttpServer(HttpServerFactory.createHttpsServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(HttpServerFactory.createHttpsStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"));
 
         whenAHttpsGetRequestIsMadeFor("/some-url");
 
@@ -302,11 +300,11 @@ public class StubbableHttpServerTest {
 
     @Test
     public void serveSupportsHttpsRequests() throws Exception {
-        underTest = new StubbableHttpServer(HttpServerFactory.createHttpsServer(nextAvailablePortNumber(), new SelfSignedSSLContextFactory()
+        underTest = new HttpStubbyServer(HttpServerFactory.createHttpsStubbyServer(nextAvailablePortNumber(), new SelfSignedSSLContextFactory()
                 .createContext("/https-keystore.jks", "password")));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"));
 
         whenAHttpsGetRequestIsMadeFor("/some-url");
 
@@ -317,10 +315,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void clearHistoryAndResponseRemovesLatestRequestAndResponses() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"));
 
         whenAHttpGetRequestIsMadeFor("/some-url");
 
@@ -332,10 +330,10 @@ public class StubbableHttpServerTest {
 
     @Test
     public void anyExistingPrimedResponsesAreRemovedFromStub() throws Exception {
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"));
 
         whenAHttpGetRequestIsMadeFor("/some-url");
 
@@ -350,10 +348,10 @@ public class StubbableHttpServerTest {
     public void requestResponseHandlerListenerIsCalled() throws Exception {
         final TestStubRequestResponseHandlerListener requestResponseHandlerListener = new TestStubRequestResponseHandlerListener();
 
-        underTest = new StubbableHttpServer(createHttpServer(nextAvailablePortNumber()));
+        underTest = new HttpStubbyServer(createHttpStubbyServer(nextAvailablePortNumber()));
         underTest.start(requestResponseHandlerListener);
 
-        underTest.willReturn(responseOf(OK, "response-to-be-returned"));
+        underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"));
 
         whenAHttpGetRequestIsMadeFor("/some-url");
 

@@ -1,31 +1,35 @@
 package com.staygrounded.httpstubby.matchers.response;
 
 import com.staygrounded.httpstubby.response.HttpStatus;
-import com.staygrounded.httpstubby.response.Response;
+import com.staygrounded.httpstubby.response.HttpResponse;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import static org.hamcrest.Matchers.equalTo;
 
-public class ResponseStatusCodeMatcher extends TypeSafeMatcher<Response> {
+public class ResponseStatusCodeMatcher extends TypeSafeMatcher<HttpResponse> {
 
-    private final HttpStatus.Code statusCode;
+    private final int statusCode;
 
-    private ResponseStatusCodeMatcher(HttpStatus.Code statusCode) {
+    private ResponseStatusCodeMatcher(int statusCode) {
         this.statusCode = statusCode;
     }
 
-    public static ResponseStatusCodeMatcher withStatusCode(HttpStatus.Code statusCode) {
+    public static ResponseStatusCodeMatcher withStatusCode(int statusCode) {
         return new ResponseStatusCodeMatcher(statusCode);
     }
 
-    protected boolean matchesSafely(Response response) {
-        return equalTo(statusCode).matches(response.getStatusCode());
+    public static ResponseStatusCodeMatcher withStatusCode(HttpStatus.Code statusCode) {
+        return new ResponseStatusCodeMatcher(statusCode.getCode());
+    }
+
+    protected boolean matchesSafely(HttpResponse httpResponse) {
+        return equalTo(statusCode).matches(httpResponse.getStatusCode());
     }
 
     @Override
-    protected void describeMismatchSafely(Response response, Description mismatchDescription) {
-        equalTo(statusCode).describeMismatch(response.getStatusCode(), mismatchDescription);
+    protected void describeMismatchSafely(HttpResponse httpResponse, Description mismatchDescription) {
+        equalTo(statusCode).describeMismatch(httpResponse.getStatusCode(), mismatchDescription);
     }
 
     @Override

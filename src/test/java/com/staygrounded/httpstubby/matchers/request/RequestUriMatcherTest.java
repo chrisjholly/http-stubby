@@ -7,38 +7,37 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static com.staygrounded.httpstubby.matchers.request.RequestUriMatcher.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static junit.framework.TestCase.assertTrue;
 
 public class RequestUriMatcherTest {
 
     @Test
     public void startsWith() throws Exception {
-        assertThat(aRequestWithUri("some-url"), uriStartsWith("some"));
+        assertTrue(uriStartsWith("some").matchesSafely(aRequestWithUri(URI.create("some-uri"))));
     }
 
     @Test
     public void contains() throws Exception {
-        assertThat(aRequestWithUri("some-url"), uriContains("me-ur"));
+        assertTrue(uriContains("me-ur").matchesSafely(aRequestWithUri(URI.create("some-uri"))));
     }
 
     @Test
     public void endsWith() throws Exception {
-        assertThat(aRequestWithUri("some-url"), uriEndsWith("url"));
+        assertTrue(uriEndsWith("uri").matchesSafely(aRequestWithUri(URI.create("some-uri"))));
     }
 
     @Test
     public void equalTo() throws Exception {
-        assertThat(aRequestWithUri("some-url"), uriEqualTo("some-url"));
+        assertTrue(uriEqualTo("some-uri").matchesSafely(aRequestWithUri(URI.create("some-uri"))));
     }
 
     @Test
     public void equalToIgnoringCase() throws Exception {
-        assertThat(aRequestWithUri("some-url"), uriEqualToIgnoringCase("soME-URl"));
+        assertTrue(uriEqualToIgnoringCase("soME-Uri").matchesSafely(aRequestWithUri(URI.create("some-uri"))));
     }
 
-
-    private HttpRequest aRequestWithUri(String uri) throws URISyntaxException {
-        return new HttpRequest(null, new URI(uri), null);
+    private HttpRequest aRequestWithUri(URI uri) throws URISyntaxException {
+        return HttpRequest.createHttpRequestWith(null, uri);
     }
 
 }

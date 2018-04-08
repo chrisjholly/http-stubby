@@ -6,33 +6,24 @@ import org.hamcrest.TypeSafeMatcher;
 
 public class RequestHeaderExistsMatcher extends TypeSafeMatcher<HttpRequest> {
 
-    private final String expectedMissingHeader;
+    private final String headerName;
 
-    private RequestHeaderExistsMatcher(String expectedMissingHeader) {
-        this.expectedMissingHeader = expectedMissingHeader;
+    private RequestHeaderExistsMatcher(String headerName) {
+        this.headerName = headerName;
     }
 
     public static RequestHeaderExistsMatcher requestHeaderExists(String header) {
         return new RequestHeaderExistsMatcher(header);
     }
 
-    public static RequestHeaderExistsMatcher requestHeaderDoesNotExist(String header) {
-        return new RequestHeaderExistsMatcher(header) {
-            @Override
-            protected boolean matchesSafely(HttpRequest httpRequest) {
-                return !super.matchesSafely(httpRequest);
-            }
-        };
-    }
-
     @Override
     protected boolean matchesSafely(HttpRequest httpRequest) {
-        return httpRequest.getRequestHeaders().containsKey(expectedMissingHeader);
+        return httpRequest.getRequestHeaders().containsKey(headerName);
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("matches request without header '" + expectedMissingHeader + "'");
+        description.appendText("matches request without header '" + headerName + "'");
     }
 
 }

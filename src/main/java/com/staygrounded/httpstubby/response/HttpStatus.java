@@ -1,5 +1,7 @@
 package com.staygrounded.httpstubby.response;
 
+import static java.lang.String.format;
+
 public class HttpStatus {
 
     public enum Code {
@@ -47,7 +49,7 @@ public class HttpStatus {
 
         @Override
         public String toString() {
-            return String.format("[%03d %s]", this.statusCode, this.message);
+            return format("[%d-%s]", this.statusCode, this.message);
         }
 
     }

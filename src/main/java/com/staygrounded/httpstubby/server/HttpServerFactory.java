@@ -20,18 +20,18 @@ public class HttpServerFactory {
         this.port = port;
     }
 
-    public static HttpServer createHttpServer(int port) {
+    public static HttpServer createHttpStubbyServer(int port) {
         return new HttpServerFactory(port).safeCreateHttpServer();
     }
 
-    public static HttpServer createHttpsServer(int port) {
+    public static HttpServer createHttpsStubbyServer(int port) {
         final SSLContext sslContext = new SelfSignedSSLContextFactory()
                 .createContext("/https-keystore.jks", "password");
         return new HttpServerFactory(port)
                 .safeCreateHttpsServer(sslContext);
     }
 
-    public static HttpServer createHttpsServer(int port, SSLContext sslContext) {
+    public static HttpServer createHttpsStubbyServer(int port, SSLContext sslContext) {
         return new HttpServerFactory(port)
                 .safeCreateHttpsServer(sslContext);
     }

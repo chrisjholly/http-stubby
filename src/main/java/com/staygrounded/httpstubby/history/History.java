@@ -1,7 +1,7 @@
 package com.staygrounded.httpstubby.history;
 
 import com.staygrounded.httpstubby.request.HttpRequest;
-import com.staygrounded.httpstubby.response.Response;
+import com.staygrounded.httpstubby.response.HttpResponse;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.ArrayDeque;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class History {
     private final Deque<HttpRequest> requests = new ArrayDeque<HttpRequest>();
-    private final Deque<Response> responses = new ArrayDeque<Response>();
+    private final Deque<HttpResponse> httpResponses = new ArrayDeque<HttpResponse>();
 
     public void newRequest(HttpRequest request) {
         synchronized (requests) {
@@ -18,10 +18,10 @@ public class History {
         }
     }
 
-    public void newResponse(Response response) {
-        if (response != null) {
-            synchronized (responses) {
-                responses.push(response);
+    public void newResponse(HttpResponse httpResponse) {
+        if (httpResponse != null) {
+            synchronized (httpResponses) {
+                httpResponses.push(httpResponse);
             }
         }
     }
@@ -32,9 +32,9 @@ public class History {
         }
     }
 
-    public synchronized Response lastResponse() {
-        synchronized (responses) {
-            return responses.isEmpty() ? null : responses.peek();
+    public synchronized HttpResponse lastResponse() {
+        synchronized (httpResponses) {
+            return httpResponses.isEmpty() ? null : httpResponses.peek();
         }
     }
 
@@ -57,8 +57,8 @@ public class History {
         synchronized (requests) {
             requests.clear();
         }
-        synchronized (responses) {
-            responses.clear();
+        synchronized (httpResponses) {
+            httpResponses.clear();
         }
     }
 
