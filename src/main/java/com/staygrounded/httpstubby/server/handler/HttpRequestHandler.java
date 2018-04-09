@@ -9,24 +9,22 @@ import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.staygrounded.httpstubby.server.request.HttpRequest.createHttpRequestFrom;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toMap;
 
 
 public class HttpRequestHandler implements HttpHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpRequestHandler.class);
 
-    private final HttpResponseMatcher responseSelector;
+    private final HttpResponseMatcher httpResponseMatcher;
     private final HttpRequestResponseAuditor httpRequestResponseAuditor;
 
-    private HttpRequestHandler(HttpResponseMatcher responseSelector, HttpRequestResponseAuditor httpRequestResponseAuditor) {
-        this.responseSelector = responseSelector;
+    private HttpRequestHandler(HttpResponseMatcher httpResponseMatcher, HttpRequestResponseAuditor httpRequestResponseAuditor) {
+        this.httpResponseMatcher = httpResponseMatcher;
         this.httpRequestResponseAuditor = httpRequestResponseAuditor;
     }
 
@@ -40,32 +38,21 @@ public class HttpRequestHandler implements HttpHandler {
             final HttpRequest httpRequest = createHttpRequestFrom(httpExchange);
             httpRequestResponseAuditor.newRequest(httpRequest);
 
-            final HttpResponse httpResponse = responseSelector.findHttpResponseFromHttpRequest(httpRequest);
+            final HttpResponse httpResponse = httpResponseMatcher.findHttpResponseFromHttpRequest(httpRequest);
             httpRequestResponseAuditor.newResponse(httpResponse);
 
-            generateResponse(httpExchange, httpResponse);
+            httpExchange.getResponseHeaders().put("Content-Type", singletonList(httpResponse.getContentType()));
+            httpExchange.getResponseHeaders().putAll(httpResponse.getHeaders().entrySet()
+                    .stream().collect(toMap(Map.Entry::getKey, entry -> singletonList(entry.getValue()))));
+
+            httpExchange.sendResponseHeaders(httpResponse.getStatusCode(), httpResponse.getResponseLength());
+            httpExchange.getResponseBody().write(httpResponse.getBody());
+
         } catch (Throwable t) {
             LOG.error("An error occurred while handling: " + httpExchange.getRequestURI().toString(), t);
         } finally {
             httpExchange.close();
         }
-    }
-
-    private void generateResponse(HttpExchange httpExchange, HttpResponse httpResponse) throws IOException {
-        if (httpResponse == null) {
-            throw new IllegalArgumentException("Cannot send response, none set");
-        }
-
-        final Map<String, List<String>> headerMap = new HashMap<>();
-        httpResponse.getHeaders().forEach((key, value) -> headerMap.put(key, singletonList(value)));
-
-        httpExchange.getResponseHeaders().put("Content-Type", singletonList(httpResponse.getContentType()));
-        httpExchange.getResponseHeaders().putAll(headerMap);
-
-        int responseBodyLength = httpResponse.getResponseLength();
-        httpExchange.sendResponseHeaders(httpResponse.getStatusCode(), responseBodyLength);
-
-        httpExchange.getResponseBody().write(httpResponse.getBody());
     }
 
 }

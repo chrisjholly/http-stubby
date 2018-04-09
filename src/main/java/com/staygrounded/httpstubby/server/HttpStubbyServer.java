@@ -56,12 +56,12 @@ class HttpStubbyServer {
         httpResponseMatcher.clearResponses();
     }
 
-    public <T extends HttpResponseBuilder> T willReturn(T responseBuilder, Matcher<HttpRequest>... matchers) {
+    public HttpResponseBuilder willReturn(HttpResponseBuilder responseBuilder, Matcher<HttpRequest>... matchers) {
         httpResponseMatcher.addResponse(allOf(matchers), responseBuilder);
         return responseBuilder;
     }
 
-    public <T extends HttpResponseBuilder> T willReturnWhenNoResponseFound(T responseBuilder) {
+    public HttpResponseBuilder willReturnWhenNoResponseFound(HttpResponseBuilder responseBuilder) {
         httpResponseMatcher.setDefaultResponse(responseBuilder);
         return responseBuilder;
     }
