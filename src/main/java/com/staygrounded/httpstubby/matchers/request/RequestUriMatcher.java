@@ -41,13 +41,7 @@ public class RequestUriMatcher extends TypeSafeMatcher<HttpRequest> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("request URI is ");
         uriMatcher.describeTo(description);
-    }
-
-    @Override
-    protected void describeMismatchSafely(HttpRequest item, Description mismatchDescription) {
-        uriMatcher.describeMismatch(item, mismatchDescription);
     }
 
 }

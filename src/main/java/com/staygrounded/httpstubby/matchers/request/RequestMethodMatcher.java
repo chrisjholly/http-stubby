@@ -1,7 +1,7 @@
 package com.staygrounded.httpstubby.matchers.request;
 
-import com.staygrounded.httpstubby.server.request.HttpRequest;
 import com.staygrounded.httpstubby.server.request.HttpMethod;
+import com.staygrounded.httpstubby.server.request.HttpRequest;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -14,10 +14,6 @@ public class RequestMethodMatcher extends TypeSafeMatcher<HttpRequest> {
 
     private RequestMethodMatcher(HttpMethod expectedMethod) {
         this.expectedMethod = expectedMethod;
-    }
-
-    public static RequestMethodMatcher forARequestWithMethod(HttpMethod requestHttpMethod) {
-        return new RequestMethodMatcher(requestHttpMethod);
     }
 
     public static RequestMethodMatcher forAGetRequest() {
@@ -42,11 +38,6 @@ public class RequestMethodMatcher extends TypeSafeMatcher<HttpRequest> {
 
     protected boolean matchesSafely(HttpRequest httpRequest) {
         return equalTo(expectedMethod).matches(httpRequest.getRequestMethod());
-    }
-
-    @Override
-    protected void describeMismatchSafely(HttpRequest item, Description mismatchDescription) {
-        equalTo(expectedMethod).describeMismatch(item.getRequestMethod(), mismatchDescription);
     }
 
     @Override

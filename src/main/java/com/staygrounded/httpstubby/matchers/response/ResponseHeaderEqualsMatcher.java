@@ -6,29 +6,23 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Objects;
 
-public class ResponseHeaderMatcher extends TypeSafeMatcher<HttpResponse> {
+public class ResponseHeaderEqualsMatcher extends TypeSafeMatcher<HttpResponse> {
 
     private final String headerName;
     private final String headerValue;
 
-    private ResponseHeaderMatcher(String headerName, String headerValue) {
+    private ResponseHeaderEqualsMatcher(String headerName, String headerValue) {
         this.headerName = headerName;
         this.headerValue = headerValue;
     }
 
-    public static ResponseHeaderMatcher responseHeaderContains(final String headerName, final String headerValue) {
-        return new ResponseHeaderMatcher(headerName, headerValue);
+    public static ResponseHeaderEqualsMatcher responseHeaderContains(final String headerName, final String headerValue) {
+        return new ResponseHeaderEqualsMatcher(headerName, headerValue);
     }
 
     @Override
     protected boolean matchesSafely(HttpResponse httpResponse) {
-
-        if (httpResponse.getHeaders().containsKey(headerName)) {
-            if (Objects.equals(httpResponse.getHeaders().get(headerName), headerValue)) {
-                return true;
-            }
-        }
-        return false;
+        return Objects.equals(httpResponse.getHeaders().get(headerName), headerValue);
     }
 
     @Override

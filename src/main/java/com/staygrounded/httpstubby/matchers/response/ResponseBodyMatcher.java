@@ -23,11 +23,6 @@ public class ResponseBodyMatcher extends TypeSafeMatcher<HttpResponse> {
     }
 
     @Override
-    protected void describeMismatchSafely(HttpResponse httpResponse, Description mismatchDescription) {
-        equalTo(responseBody).describeMismatch(httpResponse.getBodyAsString(), mismatchDescription);
-    }
-
-    @Override
     public void describeTo(Description description) {
         equalTo(responseBody).describeTo(description);
     }

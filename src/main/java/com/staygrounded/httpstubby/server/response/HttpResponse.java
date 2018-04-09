@@ -1,5 +1,9 @@
 package com.staygrounded.httpstubby.server.response;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import java.util.Map;
 
 import static com.staygrounded.httpstubby.server.MediaType.TEXT_PLAIN;
@@ -43,30 +47,16 @@ public class HttpResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        HttpResponse httpResponse = (HttpResponse) o;
-
-        if (!headers.equals(httpResponse.headers)) return false;
-        if (statusCode != httpResponse.statusCode) return false;
-        return body != null ? body.equals(httpResponse.body) : httpResponse.body == null;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        int result = headers.hashCode();
-        result = 31 * result + statusCode;
-        result = 31 * result + body.hashCode();
-        return result;
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     @Override
     public String toString() {
-        return "Response{" +
-                "headers=" + headers +
-                ", statusCode=" + statusCode +
-                ", body='" + body + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 }

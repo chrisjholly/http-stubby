@@ -1,8 +1,6 @@
-package com.staygrounded.httpstubby.matchers.response;
+package com.staygrounded.httpstubby.server.response;
 
 import com.staygrounded.httpstubby.server.request.HttpRequest;
-import com.staygrounded.httpstubby.server.response.HttpResponse;
-import com.staygrounded.httpstubby.server.response.HttpResponseBuilder;
 import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

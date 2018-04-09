@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.staygrounded.httpstubby.matchers.request.RequestHeaderContainsMatcher.requestHeaderContains;
+import static com.staygrounded.httpstubby.matchers.request.RequestHeaderEqualsMatcher.requestHeaderContains;
 import static com.staygrounded.httpstubby.server.request.HttpMethod.GET;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class RequestHeaderContainsMatcherTest {
+public class RequestHeaderEqualsMatcherTest {
 
     @Test
     public void returnsTrueWhenHttpRequestContainsMatchingHeader() throws URISyntaxException, IOException {

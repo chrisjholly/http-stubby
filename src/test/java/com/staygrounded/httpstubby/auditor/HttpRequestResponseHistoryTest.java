@@ -2,7 +2,6 @@ package com.staygrounded.httpstubby.auditor;
 
 import com.staygrounded.httpstubby.server.request.HttpRequest;
 import com.staygrounded.httpstubby.server.response.HttpResponse;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -66,13 +65,13 @@ public class HttpRequestResponseHistoryTest {
     }
 
     @Test
-    public void lastRequestAndResponseAreNullAfterClearingRequestHistory() throws Exception {
+    public void lastRequestAndResponseAreNullAfterClearingRequestAndResponses() throws Exception {
         final HttpRequest request = mock(HttpRequest.class);
         final HttpResponse httpResponse = mock(HttpResponse.class);
 
         underTest.newRequest(request);
         underTest.newResponse(httpResponse);
-        underTest.clear();
+        underTest.clearHttpRequestAndResponses();
 
         assertNull(underTest.lastRequest());
         assertNull(underTest.lastResponse());

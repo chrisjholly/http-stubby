@@ -5,7 +5,7 @@ import com.staygrounded.httpstubby.auditor.HttpRequestResponseEventListener;
 import com.staygrounded.httpstubby.auditor.HttpRequestResponseHistory;
 import com.staygrounded.httpstubby.server.request.HttpRequest;
 import com.staygrounded.httpstubby.server.response.HttpResponseBuilder;
-import com.staygrounded.httpstubby.matchers.response.HttpResponseMatcher;
+import com.staygrounded.httpstubby.server.response.HttpResponseMatcher;
 import org.hamcrest.Matcher;
 
 import static com.staygrounded.httpstubby.server.handler.HttpRequestHandler.httpRequestHandler;
@@ -35,7 +35,7 @@ class HttpStubbyServer {
 
     public void start() {
         this.server.addContext(httpRequestHandler(httpResponseMatcher, httpRequestResponseAuditor));
-        this.httpRequestResponseHistory.clear();
+        this.httpRequestResponseHistory.clearHttpRequestAndResponses();
         this.server.start();
     }
 
@@ -52,7 +52,7 @@ class HttpStubbyServer {
     }
 
     public void clearHistoryAndResponses() {
-        httpRequestResponseHistory.clear();
+        httpRequestResponseHistory.clearHttpRequestAndResponses();
         httpResponseMatcher.clearResponses();
     }
 

@@ -3,7 +3,7 @@ package com.staygrounded.httpstubby.server.handler;
 import com.staygrounded.httpstubby.auditor.HttpRequestResponseAuditor;
 import com.staygrounded.httpstubby.server.request.HttpRequest;
 import com.staygrounded.httpstubby.server.response.HttpResponse;
-import com.staygrounded.httpstubby.matchers.response.HttpResponseMatcher;
+import com.staygrounded.httpstubby.server.response.HttpResponseMatcher;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;

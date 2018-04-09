@@ -4,6 +4,8 @@ import com.staygrounded.httpstubby.server.request.HttpRequest;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
+import static org.hamcrest.Matchers.contains;
+
 public class RequestHeaderExistsMatcher extends TypeSafeMatcher<HttpRequest> {
 
     private final String headerName;
@@ -23,7 +25,7 @@ public class RequestHeaderExistsMatcher extends TypeSafeMatcher<HttpRequest> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("matches request without header '" + headerName + "'");
+        contains(headerName).describeTo(description);
     }
 
 }

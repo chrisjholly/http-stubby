@@ -6,18 +6,18 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Objects;
 
-public class RequestHeaderContainsMatcher extends TypeSafeMatcher<HttpRequest> {
+public class RequestHeaderEqualsMatcher extends TypeSafeMatcher<HttpRequest> {
 
     private final String headerName;
     private final String headerValue;
 
-    private RequestHeaderContainsMatcher(String headerName, String headerValue) {
+    private RequestHeaderEqualsMatcher(String headerName, String headerValue) {
         this.headerName = headerName;
         this.headerValue = headerValue;
     }
 
-    public static RequestHeaderContainsMatcher requestHeaderContains(final String headerName, final String headerValue) {
-        return new RequestHeaderContainsMatcher(headerName, headerValue);
+    public static RequestHeaderEqualsMatcher requestHeaderContains(final String headerName, final String headerValue) {
+        return new RequestHeaderEqualsMatcher(headerName, headerValue);
     }
 
     @Override

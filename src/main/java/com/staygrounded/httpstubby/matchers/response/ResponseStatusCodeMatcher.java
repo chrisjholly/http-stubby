@@ -1,7 +1,7 @@
 package com.staygrounded.httpstubby.matchers.response;
 
-import com.staygrounded.httpstubby.server.response.HttpStatus;
 import com.staygrounded.httpstubby.server.response.HttpResponse;
+import com.staygrounded.httpstubby.server.response.HttpStatus;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -25,11 +25,6 @@ public class ResponseStatusCodeMatcher extends TypeSafeMatcher<HttpResponse> {
 
     protected boolean matchesSafely(HttpResponse httpResponse) {
         return equalTo(statusCode).matches(httpResponse.getStatusCode());
-    }
-
-    @Override
-    protected void describeMismatchSafely(HttpResponse httpResponse, Description mismatchDescription) {
-        equalTo(statusCode).describeMismatch(httpResponse.getStatusCode(), mismatchDescription);
     }
 
     @Override

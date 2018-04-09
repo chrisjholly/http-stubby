@@ -1,5 +1,7 @@
 package com.staygrounded.httpstubby.server.response;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,12 +65,7 @@ public class HttpResponseBuilder {
 
     @Override
     public String toString() {
-        return "ResponseBuilder{" +
-                "headers=" + headers +
-                ", statusCode=" + statusCode +
-                ", bodyCallback=" + bodyCallback +
-                ", latency=" + latency +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

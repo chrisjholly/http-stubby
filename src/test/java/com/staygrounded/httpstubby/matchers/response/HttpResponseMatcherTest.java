@@ -3,6 +3,7 @@ package com.staygrounded.httpstubby.matchers.response;
 import com.staygrounded.httpstubby.server.request.HttpRequest;
 import com.staygrounded.httpstubby.server.response.HttpResponse;
 import com.staygrounded.httpstubby.server.response.HttpResponseBuilder;
+import com.staygrounded.httpstubby.server.response.HttpResponseMatcher;
 import org.junit.Test;
 
 import java.net.URI;

@@ -3,6 +3,7 @@ package com.staygrounded.httpstubby.server.request;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -65,11 +66,6 @@ public class HttpRequest {
 
     @Override
     public String toString() {
-        return "HttpRequest{" +
-                "httpMethod=" + httpMethod +
-                ", requestUri=" + requestUri +
-                ", requestBody='" + requestBody + '\'' +
-                ", requestHeaders=" + requestHeaders +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -8,30 +8,31 @@ import java.util.LinkedList;
 
 public class HttpRequestResponseHistory {
 
-    private final LinkedList<HttpRequest> requests = new LinkedList<>();
+    private final LinkedList<HttpRequest> httpRequests = new LinkedList<>();
     private final LinkedList<HttpResponse> httpResponses = new LinkedList<>();
 
-    public void newRequest(HttpRequest request) {
-        requests.push(request);
+    void newRequest(HttpRequest request) {
+        httpRequests.push(request);
     }
 
-    public void newResponse(HttpResponse httpResponse) {
+    void newResponse(HttpResponse httpResponse) {
         httpResponses.push(httpResponse);
     }
 
     public HttpRequest lastRequest() {
-        return requests.isEmpty() ? null : requests.getFirst();
+        return httpRequests.isEmpty() ? null : httpRequests.getFirst();
     }
 
     public HttpResponse lastResponse() {
         return httpResponses.isEmpty() ? null : httpResponses.getFirst();
     }
 
-    public void clear() {
-        requests.clear();
+    public void clearHttpRequestAndResponses() {
+        httpRequests.clear();
         httpResponses.clear();
     }
 
+    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }

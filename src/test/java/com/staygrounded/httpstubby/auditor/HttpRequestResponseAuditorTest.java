@@ -32,6 +32,15 @@ public class HttpRequestResponseAuditorTest {
     }
 
     @Test
+    public void auditsRequestWithoutAnyEventListeners() throws Exception {
+        final HttpRequest httpRequestMock = mock(HttpRequest.class);
+
+        underTest.newRequest(httpRequestMock);
+
+        verify(httpRequestResponseHistory, times(1)).newRequest(httpRequestMock);
+    }
+
+    @Test
     public void invokesMultipleEventListenersWhenNewResponseIsExecuted() throws Exception {
         final HttpResponse httpResponseMock = mock(HttpResponse.class);
 
@@ -43,6 +52,15 @@ public class HttpRequestResponseAuditorTest {
         verify(httpRequestResponseHistory, times(1)).newResponse(httpResponseMock);
         verify(httpRequestResponseEventListener1, times(1)).newResponse(httpResponseMock);
         verify(httpRequestResponseEventListener2, times(1)).newResponse(httpResponseMock);
+    }
+
+    @Test
+    public void auditsResponseWithoutAnyEventListeners() throws Exception {
+        final HttpResponse httpResponseMock = mock(HttpResponse.class);
+
+        underTest.newResponse(httpResponseMock);
+
+        verify(httpRequestResponseHistory, times(1)).newResponse(httpResponseMock);
     }
 
 }
