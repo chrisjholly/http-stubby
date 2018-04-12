@@ -31,6 +31,7 @@ import static com.staygrounded.httpstubby.matchers.request.RequestUriMatcher.*;
 import static com.staygrounded.httpstubby.matchers.response.ResponseBodyMatcher.withBody;
 import static com.staygrounded.httpstubby.matchers.response.ResponseStatusCodeMatcher.withStatusCode;
 import static com.staygrounded.httpstubby.server.HttpPortNumberGenerator.nextAvailablePortNumber;
+import static com.staygrounded.httpstubby.server.HttpServerFactory.*;
 import static com.staygrounded.httpstubby.server.HttpServerFactory.httpConfiguration;
 import static com.staygrounded.httpstubby.server.HttpStubbyServer.stubbyServerWith;
 import static com.staygrounded.httpstubby.server.response.HttpResponseBuilder.responseOf;
@@ -202,7 +203,7 @@ public class HttpStubbyServerTest {
 
     @Test
     public void returnsResponseFromServerWithDefaultHttpsConfigurationServingHttpsRequests() throws Exception {
-        underTest = stubbyServerWith(HttpServerFactory.httpsConfiguration(nextAvailablePortNumber()));
+        underTest = stubbyServerWith(httpsConfiguration(nextAvailablePortNumber()));
         underTest.start();
 
         underTest.willReturn(responseOf(OK).withBody("response-to-be-returned"));
@@ -216,7 +217,7 @@ public class HttpStubbyServerTest {
 
     @Test
     public void returnsResponseFromServerWithCustomHttpsConfigurationServingHttpsRequests() throws Exception {
-        underTest = stubbyServerWith(HttpServerFactory.httpsConfiguration(nextAvailablePortNumber(), new SelfSignedSSLContextFactory()
+        underTest = stubbyServerWith(httpsConfiguration(nextAvailablePortNumber(), new SelfSignedSSLContextFactory()
                 .createContext("/https-keystore.jks", "password")));
         underTest.start();
 
@@ -259,7 +260,7 @@ public class HttpStubbyServerTest {
     }
 
     @Test
-    public void requestResponseHandlerListenerIsCalledWhenRequestIsReceived() throws Exception {
+    public void requestResponseHandlerListenerIsCalledWhenRequest() throws Exception {
         final HttpRequestResponseEventListener requestResponseHandlerListener = mock(HttpRequestResponseEventListener.class);
 
         underTest = stubbyServerWith(httpConfiguration(nextAvailablePortNumber()));
