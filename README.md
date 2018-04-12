@@ -50,7 +50,7 @@ stubbyServer.registerHttpRequestResponseEventListener(new HttpRequestResponseEve
             }
 
             @Override
-            public void newResponse(com.staygrounded.httpstubby.server.response.HttpResponse httpResponse) {
+            public void newResponse(HttpResponse httpResponse) {
 
             }
         });
