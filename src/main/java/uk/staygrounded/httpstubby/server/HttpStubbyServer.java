@@ -11,7 +11,7 @@ import org.hamcrest.Matcher;
 import static uk.staygrounded.httpstubby.server.handler.HttpRequestHandler.httpRequestHandler;
 import static org.hamcrest.core.AllOf.allOf;
 
-class HttpStubbyServer {
+public class HttpStubbyServer {
 
     private final HttpServer server;
     private final HttpResponseMatcher httpResponseMatcher;
