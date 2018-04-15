@@ -7,7 +7,12 @@
     <groupId>uk.staygrounded</groupId>
     <artifactId>http-stubby</artifactId>
     <version>1.0</version>
-    <name>http-stubby</name>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>
+        http-stubby is a tool designed to assist in testing applications that interact over the HTTP(S) protocol
+    </description>
+    <url>https://github.com/chrisjholly/http-stubby</url>
 
     <dependencies>
         <!--LOGGING : START-->
@@ -86,7 +91,78 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/chrisjholly/http-stubby.git</connection>
+        <developerConnection>scm:git:ssh://github.com:chrisjholly/http-stubby.git</developerConnection>
+        <url>http://github.com/chrisjholly/http-stubby/tree/master</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Chris Holly</name>
+            <organization>staygrounded.uk</organization>
+            <organizationUrl>https://github.com/chrisjholly/http-stubby</organizationUrl>
+        </developer>
+    </developers>
 </project>
