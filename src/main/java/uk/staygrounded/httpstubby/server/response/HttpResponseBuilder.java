@@ -56,10 +56,18 @@ public class HttpResponseBuilder {
 
     public HttpResponse build() {
         try {
-            sleep(latency.toMillis());
+            sleepSafelyFor(latency);
             return new HttpResponse(statusCode, bodyCallback.call(), headers);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create the response body", e);
+        }
+    }
+
+    private void sleepSafelyFor(Duration latency) {
+        try {
+            sleep(latency.toMillis());
+        } catch (InterruptedException ignored) {
+
         }
     }
 
