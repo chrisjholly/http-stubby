@@ -129,7 +129,7 @@ public class HttpStubbyServerTest {
         underTest = HttpStubbyServer.stubbyServerWith(HttpServerFactory.httpConfiguration(HttpPortNumberGenerator.nextAvailablePortNumber()));
         underTest.start();
 
-        underTest.willReturn(responseOf(HttpStatus.Code.OK).withBody("response-for-post-request"), RequestUriMatcher.uriEndsWith("/url-to-test"), RequestMethodMatcher.forAPostRequest());
+        underTest.willReturn(responseOf(HttpStatus.Code.OK).withBody("response-for-post-request"), allOf(RequestUriMatcher.uriEndsWith("/url-to-test"), RequestMethodMatcher.forAPostRequest()));
 
         whenAHttpPostRequestIsMadeFor("/url-to-test");
 

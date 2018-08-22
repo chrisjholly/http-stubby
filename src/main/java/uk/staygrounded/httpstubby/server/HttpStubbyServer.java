@@ -56,14 +56,19 @@ public class HttpStubbyServer {
         httpResponseMatcher.clearResponses();
     }
 
-    public HttpResponseBuilder willReturn(HttpResponseBuilder responseBuilder, Matcher<HttpRequest>... matchers) {
-        httpResponseMatcher.addResponse(allOf(matchers), responseBuilder);
-        return responseBuilder;
+    public HttpStubbyServer willReturn(HttpResponseBuilder responseBuilder) {
+        httpResponseMatcher.addResponse(allOf(), responseBuilder);
+        return this;
     }
 
-    public HttpResponseBuilder willReturnWhenNoResponseFound(HttpResponseBuilder responseBuilder) {
+    public HttpStubbyServer willReturn(HttpResponseBuilder responseBuilder, Matcher<HttpRequest> matchers) {
+        httpResponseMatcher.addResponse(matchers, responseBuilder);
+        return this;
+    }
+
+    public HttpStubbyServer willReturnWhenNoResponseFound(HttpResponseBuilder responseBuilder) {
         httpResponseMatcher.setDefaultResponse(responseBuilder);
-        return responseBuilder;
+        return this;
     }
 
 }
